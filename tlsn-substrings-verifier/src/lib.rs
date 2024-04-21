@@ -12,8 +12,6 @@ pub mod merkle;
 pub mod proof;
 pub mod transcript;
 
-pub use proof::{SessionHeader, SessionProof, TlsProof, SubstringsProof};
-
 pub use transcript::{Direction, RedactedTranscript, Transcript, TranscriptSlice};
 
 use mpz_garble_core::{encoding_state, EncodedValue};
