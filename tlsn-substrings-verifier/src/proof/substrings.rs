@@ -7,13 +7,13 @@ use crate::{
     },
     merkle::MerkleProof,
     transcript::get_value_ids,
-    Direction, EncodingId, RedactedTranscript, SessionHeader, Transcript, TranscriptSlice,
+    Direction, EncodingId, RedactedTranscript, Transcript, TranscriptSlice, SessionHeader,
     MAX_TOTAL_COMMITTED_DATA,
 };
 use mpz_circuits::types::ValueType;
 use mpz_garble_core::Encoder;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use utils::range::{RangeDisjoint, RangeSet, RangeUnion, ToRangeSet};
 
 /// An error for [`SubstringsProofBuilder`]

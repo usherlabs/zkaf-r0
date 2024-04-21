@@ -6,6 +6,9 @@ use mpz_core::{
 use mpz_garble_core::{encoding_state, encoding_state::Full, EncodedValue};
 use serde::{Deserialize, Serialize};
 
+extern crate alloc;
+use alloc::vec::Vec;
+
 /// A Blake3 commitment to the encodings of the substrings of a [`Transcript`](crate::Transcript).
 #[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Blake3Commitment {

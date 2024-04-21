@@ -5,23 +5,18 @@
 #![deny(missing_docs, unreachable_pub, unused_must_use)]
 #![deny(clippy::all)]
 #![forbid(unsafe_code)]
+#![no_std]
 
 pub mod commitment;
-#[cfg(any(test, feature = "fixtures"))]
-pub mod fixtures;
 pub mod merkle;
-pub mod msg;
 pub mod proof;
-pub mod session;
-mod signature;
 pub mod transcript;
 
-pub use session::{HandshakeSummary, NotarizedSession, SessionData, SessionHeader};
-pub use signature::{NotaryPublicKey, Signature};
+pub use proof::{SessionHeader, SessionProof, TlsProof, SubstringsProof};
+
 pub use transcript::{Direction, RedactedTranscript, Transcript, TranscriptSlice};
 
 use mpz_garble_core::{encoding_state, EncodedValue};
-use serde::{Deserialize, Serialize};
 
 /// The maximum allowed total bytelength of all committed data. Used to prevent DoS during verification.
 /// (this will cause the verifier to hash up to a max of 1GB * 128 = 128GB of plaintext encodings if the
@@ -50,29 +45,5 @@ impl EncodingId {
     /// Returns the encoding ID.
     pub(crate) fn to_inner(self) -> u64 {
         self.0
-    }
-}
-
-/// A Server's name.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub enum ServerName {
-    /// A DNS name.
-    Dns(String),
-}
-
-impl ServerName {
-    /// Returns a reference to the server name as a string slice.
-    pub fn as_str(&self) -> &str {
-        match self {
-            Self::Dns(name) => name.as_str(),
-        }
-    }
-}
-
-impl AsRef<str> for ServerName {
-    fn as_ref(&self) -> &str {
-        match self {
-            Self::Dns(name) => name.as_ref(),
-        }
     }
 }

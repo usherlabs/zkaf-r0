@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use bimap::BiMap;
 use mpz_core::hash::Hash;
 use utils::range::{RangeSet, ToRangeSet};
@@ -14,8 +12,13 @@ use crate::{
     Direction, EncodingProvider,
 };
 
+use hashbrown::HashMap;
+use thiserror_no_std::Error;
+extern crate alloc;
+use alloc::vec::Vec;
+
 /// An error for [`TranscriptCommitmentBuilder`]
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, Error)]
 pub enum TranscriptCommitmentBuilderError {
     /// Empty range
     #[error("can not commit to an empty range")]
