@@ -11,7 +11,10 @@ pub mod commitment;
 pub mod merkle;
 pub mod proof;
 pub mod transcript;
+pub mod types;
 
+extern crate alloc;
+use alloc::{boxed::Box, vec::Vec};
 pub use transcript::{Direction, RedactedTranscript, Transcript, TranscriptSlice};
 
 use mpz_garble_core::{encoding_state, EncodedValue};

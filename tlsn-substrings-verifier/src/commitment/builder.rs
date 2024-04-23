@@ -6,10 +6,7 @@ use crate::{
     commitment::{
         blake3::Blake3Commitment, Commitment, CommitmentId, CommitmentInfo, CommitmentKind,
         TranscriptCommitments,
-    },
-    merkle::MerkleTree,
-    transcript::get_value_ids,
-    Direction, EncodingProvider,
+    }, merkle::MerkleTree, transcript::get_value_ids, types::CustomHashMap, Direction, EncodingProvider
 };
 
 use hashbrown::HashMap;
@@ -187,7 +184,7 @@ impl TranscriptCommitmentBuilder {
 
         Ok(TranscriptCommitments {
             merkle_tree,
-            commitments,
+            commitments: CustomHashMap(commitments),
             commitment_info,
         })
     }

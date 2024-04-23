@@ -10,6 +10,7 @@
 //! Later, during selective disclosure to a `Verifier`, the `Prover` can open any subset of the commitments in the `MerkleTree`
 //! by providing a `MerkleProof` for the corresponding `MerkleRoot` which was signed by the Notary.
 
+use alloc::vec::Vec;
 use mpz_core::hash::Hash;
 use rs_merkle::{
     algorithms::Sha256, proof_serializers, MerkleProof as MerkleProof_rs_merkle,
@@ -36,7 +37,7 @@ impl From<[u8; 32]> for MerkleRoot {
 }
 
 /// Errors that can occur during operations with Merkle tree and Merkle proof
-#[derive(Debug, thiserror::Error, PartialEq)]
+#[derive(Debug, thiserror_no_std::Error, PartialEq)]
 #[allow(missing_docs)]
 pub enum MerkleError {
     #[error("Failed to verify a Merkle proof")]

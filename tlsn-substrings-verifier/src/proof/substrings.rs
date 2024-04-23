@@ -1,4 +1,5 @@
 //! Substrings proofs based on commitments.
+#![allow(missing_docs)]
 
 use crate::{
     commitment::{
@@ -7,17 +8,22 @@ use crate::{
     },
     merkle::MerkleProof,
     transcript::get_value_ids,
-    Direction, EncodingId, RedactedTranscript, Transcript, TranscriptSlice, SessionHeader,
+    types::CustomHashMap,
+    Direction, EncodingId, RedactedTranscript, Transcript, TranscriptSlice,
     MAX_TOTAL_COMMITTED_DATA,
 };
+use alloc::{string::String, vec::Vec};
+use alloc::{string::ToString, vec};
+use hashbrown::HashMap;
 use mpz_circuits::types::ValueType;
 use mpz_garble_core::Encoder;
 use serde::{Deserialize, Serialize};
-use hashbrown::HashMap;
 use utils::range::{RangeDisjoint, RangeSet, RangeUnion, ToRangeSet};
+extern crate alloc;
+use super::SessionHeader;
 
 /// An error for [`SubstringsProofBuilder`]
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, thiserror_no_std::Error)]
 #[non_exhaustive]
 pub enum SubstringsProofBuilderError {
     /// Invalid commitment id.
@@ -154,14 +160,14 @@ impl<'a> SubstringsProofBuilder<'a> {
         let inclusion_proof = commitments.merkle_tree().proof(&indices);
 
         Ok(SubstringsProof {
-            openings,
+            openings: CustomHashMap(openings),
             inclusion_proof,
         })
     }
 }
 
 /// An error relating to [`SubstringsProof`]
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, thiserror_no_std::Error)]
 #[non_exhaustive]
 pub enum SubstringsProofError {
     /// The proof contains more data than the maximum allowed.
@@ -184,15 +190,18 @@ pub enum SubstringsProofError {
     InvalidInclusionProof(String),
 }
 
+
 /// A substring proof using commitments
 ///
 /// This substring proof contains the commitment openings and a proof
 /// that the corresponding commitments are present in the merkle tree.
 #[derive(Serialize, Deserialize)]
 pub struct SubstringsProof {
-    openings: HashMap<CommitmentId, (CommitmentInfo, CommitmentOpening)>,
-    inclusion_proof: MerkleProof,
+    pub openings: CustomHashMap<CommitmentId, (CommitmentInfo, CommitmentOpening)>,
+    pub inclusion_proof: MerkleProof,
 }
+
+
 
 opaque_debug::implement!(SubstringsProof);
 
@@ -210,6 +219,8 @@ impl SubstringsProof {
             openings,
             inclusion_proof,
         } = self;
+
+        let openings: HashMap<CommitmentId, (CommitmentInfo, CommitmentOpening)> = openings.into();
 
         let mut indices = Vec::with_capacity(openings.len());
         let mut expected_hashes = Vec::with_capacity(openings.len());

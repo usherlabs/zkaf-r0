@@ -4,8 +4,7 @@
 pub mod blake3;
 mod builder;
 
-use std::collections::HashMap;
-
+use alloc::vec::Vec;
 use bimap::BiMap;
 use mpz_core::hash::Hash;
 use mpz_garble_core::{encoding_state::Full, EncodedValue};
@@ -13,8 +12,7 @@ use serde::{Deserialize, Serialize};
 use utils::range::RangeSet;
 
 use crate::{
-    merkle::{MerkleRoot, MerkleTree},
-    Direction,
+    merkle::{MerkleRoot, MerkleTree}, types::CustomHashMap, Direction
 };
 
 pub use builder::{TranscriptCommitmentBuilder, TranscriptCommitmentBuilderError};
@@ -151,7 +149,7 @@ impl CommitmentOpening {
 pub struct TranscriptCommitments {
     /// A Merkle tree of commitments. Each commitment's index in the tree matches its `CommitmentId`.
     merkle_tree: MerkleTree,
-    commitments: HashMap<CommitmentId, Commitment>,
+    commitments: CustomHashMap<CommitmentId, Commitment>,
     /// Information about the above `commitments`.
     commitment_info: BiMap<CommitmentId, CommitmentInfo>,
 }
