@@ -2,26 +2,41 @@
 // If you want to try std support, also update the guest Cargo.toml file
 #![no_std]  // std support is experimental
 
-
 extern crate alloc;
+
+use alloc::string::{String, ToString};
 use risc0_zkvm::guest::env;
-use alloc::string::ToString;
+use tlsn_substrings_verifier::proof::{SessionHeader, SubstringsProof};
 
 risc0_zkvm::guest::entry!(main);
 
+
+
 fn main() {
-    // // Implement your guest code here
+    // TODO: Implement your guest code here
 
-    // read the input
-    let (input, input_2): (u32, u32) = env::read();
+    // read the substring
+    // logging this data does produce results
+    let (session_header, substrings): (SessionHeader, SubstringsProof) = env::read();
 
-    // do something with the input
-    assert_eq!(input, input_2);
+    // trying to reconstruct structs from strings throw an error
+    // // reconstruct the header and substring
+    // let substrings: SubstringsProof = serde_json::from_str(&serialized_substrings).expect("Deserialization failed");
+    // let header: SessionHeader = serde_json::from_str(&serialized_header)
+    //     .expect("Deserialization failed");
 
-    let proof = zkaf_guest::constants::PROOF;
-    let pub_key = zkaf_guest::constants::PUB_KEY;
-    let res = zkaf_guest::utils::verify_proof(&proof.to_string(), &pub_key.to_string());
+    // however calling this function throws an error, the same error from above.
+    let (mut sent, mut recv) = substrings.verify(&session_header).unwrap();
+    
+    // convert to string
+    // sent.set_redacted(b'X');
+    // recv.set_redacted(b'X');
+
+    // log the request and response
+    // let request = String::from_utf8(sent.data().to_vec()).unwrap();
+    // let response = String::from_utf8(recv.data().to_vec()).unwrap();
 
     // write public output to the journal
-    env::commit(&input);
+    // env::commit(&request);
+    env::commit(&"hello".to_string());
 }
