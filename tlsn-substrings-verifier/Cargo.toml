@@ -16,6 +16,7 @@ mpz-garble-core = { git = "https://github.com/privacy-scaling-explorations/mpz",
 mpz-circuits = { git = "https://github.com/privacy-scaling-explorations/mpz", rev = "9f7403b" }
 
 serde = "1"
+serde_json = "1.0.107"
 rs_merkle = "1"
 hex = "0.4"
 bytes = {version = "1.4", features = ["serde"]}
