@@ -29,14 +29,24 @@ fn main() {
     let (mut sent, mut recv) = substrings.verify(&session_header).unwrap();
     
     // convert to string
-    // sent.set_redacted(b'X');
-    // recv.set_redacted(b'X');
+    sent.set_redacted(b'X');
+    recv.set_redacted(b'X');
 
     // log the request and response
-    // let request = String::from_utf8(sent.data().to_vec()).unwrap();
-    // let response = String::from_utf8(recv.data().to_vec()).unwrap();
+    let request = String::from_utf8(sent.data().to_vec()).unwrap();
+    let response = String::from_utf8(recv.data().to_vec()).unwrap();
+
+    env::log("request");
+    env::log(&request);
+
+    env::log("response");
+    env::log(&response);
+
 
     // write public output to the journal
     // env::commit(&request);
-    env::commit(&"hello".to_string());
+    env::log("committing data to journal");
+    env::commit(&(request, response));
+    env::log("committed data to journal");
+
 }
