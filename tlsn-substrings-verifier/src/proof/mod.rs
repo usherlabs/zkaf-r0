@@ -3,7 +3,7 @@
 mod session;
 mod substrings;
 
-pub use session::{SessionHeader, SessionProof};
+pub use session::{SessionProof, SessionHeader};
 
 pub use substrings::{
     SubstringsProof, SubstringsProofBuilder, SubstringsProofBuilderError, SubstringsProofError,

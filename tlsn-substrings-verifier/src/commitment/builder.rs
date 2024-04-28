@@ -1,16 +1,20 @@
+use std::collections::HashMap;
+
 use bimap::BiMap;
 use mpz_core::hash::Hash;
+use thiserror::Error;
 use utils::range::{RangeSet, ToRangeSet};
 
 use crate::{
     commitment::{
         blake3::Blake3Commitment, Commitment, CommitmentId, CommitmentInfo, CommitmentKind,
         TranscriptCommitments,
-    }, merkle::MerkleTree, transcript::get_value_ids, types::CustomHashMap, Direction, EncodingProvider
+    },
+    merkle::MerkleTree,
+    transcript::get_value_ids,
+    Direction, EncodingProvider,
 };
 
-use hashbrown::HashMap;
-use thiserror_no_std::Error;
 extern crate alloc;
 use alloc::vec::Vec;
 
@@ -184,7 +188,7 @@ impl TranscriptCommitmentBuilder {
 
         Ok(TranscriptCommitments {
             merkle_tree,
-            commitments: CustomHashMap(commitments),
+            commitments,
             commitment_info,
         })
     }

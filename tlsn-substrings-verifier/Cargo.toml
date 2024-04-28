@@ -24,7 +24,7 @@ opaque-debug = "0.3"
 
 bimap = { version = "0.6.3", features = ["serde"] }
 hashbrown = "0.14.3"
-thiserror-no-std = "2.0.2"
+thiserror = "1"
 
 [dev-dependencies]
 rand_chacha = "0.3"
