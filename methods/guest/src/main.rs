@@ -1,15 +1,8 @@
 #![no_main]
-// If you want to try std support, also update the guest Cargo.toml file
-#![no_std]  // std support is experimental
-
-extern crate alloc;
-
-use alloc::string::String;
 use risc0_zkvm::guest::env;
 use tlsn_substrings_verifier::proof::{SessionHeader, SubstringsProof};
 
 risc0_zkvm::guest::entry!(main);
-
 
 
 fn main() {
