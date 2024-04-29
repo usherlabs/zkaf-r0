@@ -5,7 +5,6 @@
 #![deny(missing_docs, unreachable_pub, unused_must_use)]
 #![deny(clippy::all)]
 #![forbid(unsafe_code)]
-#![no_std]
 
 pub mod commitment;
 pub mod merkle;

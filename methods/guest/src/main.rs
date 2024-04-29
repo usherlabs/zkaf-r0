@@ -1,27 +1,25 @@
 #![no_main]
-// If you want to try std support, also update the guest Cargo.toml file
-#![no_std]  // std support is experimental
-
-
-extern crate alloc;
 use risc0_zkvm::guest::env;
-use alloc::string::ToString;
+use tlsn_substrings_verifier::proof::{SessionHeader, SubstringsProof};
 
 risc0_zkvm::guest::entry!(main);
 
+
 fn main() {
-    // // Implement your guest code here
+    // read the substring
+    let (session_header, substrings): (SessionHeader, SubstringsProof) = env::read();
+    let (mut sent, mut recv) = substrings.verify(&session_header).unwrap();
+    
+    // set redacted string value
+    sent.set_redacted(b'X');
+    recv.set_redacted(b'X');
 
-    // read the input
-    let (input, input_2): (u32, u32) = env::read();
+    // log the request and response
+    let request = String::from_utf8(sent.data().to_vec()).unwrap();
+    let response = String::from_utf8(recv.data().to_vec()).unwrap();
 
-    // do something with the input
-    assert_eq!(input, input_2);
-
-    let proof = zkaf_guest::constants::PROOF;
-    let pub_key = zkaf_guest::constants::PUB_KEY;
-    let res = zkaf_guest::utils::verify_proof(&proof.to_string(), &pub_key.to_string());
-
-    // write public output to the journal
-    env::commit(&input);
+    // write request and response to the journal public output
+    env::log("committing data to journal");
+    env::commit(&(request, response));
+    env::log("committed data to journal");
 }

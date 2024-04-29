@@ -16,6 +16,7 @@ mpz-garble-core = { git = "https://github.com/privacy-scaling-explorations/mpz",
 mpz-circuits = { git = "https://github.com/privacy-scaling-explorations/mpz", rev = "9f7403b" }
 
 serde = "1"
+serde_json = "1.0.107"
 rs_merkle = "1"
 hex = "0.4"
 bytes = {version = "1.4", features = ["serde"]}
@@ -23,9 +24,10 @@ opaque-debug = "0.3"
 
 bimap = { version = "0.6.3", features = ["serde"] }
 hashbrown = "0.14.3"
-thiserror-no-std = "2.0.2"
+thiserror = "1"
 
 [dev-dependencies]
 rand_chacha = "0.3"
 rand_core = "0.6"
 bincode = "1"
+rstest = "0.5"

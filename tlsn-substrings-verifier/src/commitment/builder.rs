@@ -1,5 +1,8 @@
+use std::collections::HashMap;
+
 use bimap::BiMap;
 use mpz_core::hash::Hash;
+use thiserror::Error;
 use utils::range::{RangeSet, ToRangeSet};
 
 use crate::{
@@ -12,8 +15,6 @@ use crate::{
     Direction, EncodingProvider,
 };
 
-use hashbrown::HashMap;
-use thiserror_no_std::Error;
 extern crate alloc;
 use alloc::vec::Vec;
 
