@@ -10,7 +10,7 @@ use tlsn_substrings_verifier::{self, proof::{SessionHeader, SubstringsProof}};
 
 fn main() {
     // Deserialize the proof
-    let proof = std::fs::read_to_string("fixtures/proof.json").unwrap();
+    let proof = std::fs::read_to_string("host/fixtures/proof.json").unwrap();
     let proof: TlsProof = serde_json::from_str(proof.as_str()).unwrap();
 
     let TlsProof {
@@ -63,6 +63,6 @@ fn main() {
 
 /// Returns a Notary pubkey trusted by this Verifier
 fn notary_pubkey() -> p256::PublicKey {
-    let pem_file = str::from_utf8(include_bytes!("../../fixtures/notary.pub")).unwrap();
+    let pem_file = str::from_utf8(include_bytes!("../fixtures/notary.pub")).unwrap();
     p256::PublicKey::from_public_key_pem(pem_file).unwrap()
 }
