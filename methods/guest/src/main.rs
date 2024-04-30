@@ -14,7 +14,7 @@ fn main() {
     sent.set_redacted(b'X');
     recv.set_redacted(b'X');
 
-    // log the request and response
+    // recover the request and response
     let request = String::from_utf8(sent.data().to_vec()).unwrap();
     let response = String::from_utf8(recv.data().to_vec()).unwrap();
 
