@@ -16,3 +16,6 @@ hashbrown = "0.14.3"
 
 methods = { path = "../methods" }
 tlsn-substrings-verifier = { path = "../tlsn-substrings-verifier" }
+
+[features]
+cuda = ["risc0-zkvm/cuda"]
