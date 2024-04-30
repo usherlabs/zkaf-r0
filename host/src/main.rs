@@ -34,4 +34,5 @@ fn main() {
     println!("I generated a proof of guest execution!");
     println!("Request Verified: \n{}", request);
     println!("Response Verified: \n {}", response);
+
 }
