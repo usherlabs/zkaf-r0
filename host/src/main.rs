@@ -53,7 +53,7 @@ fn main() {
     let receipt = prover.prove(env, ZKAF_ELF).unwrap();
 
     // Extract journal of receipt
-    let (request, response): (String, String)= receipt.journal.decode().unwrap();
+    let (request, response): (bool, bool)= receipt.journal.decode().unwrap();
 
     // Print, notice, after committing to a journal, the private input became public
     println!("I generated a proof of guest execution!");
