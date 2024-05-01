@@ -21,7 +21,7 @@ fn main() {
     let proof_params: ZkParam = serde_json::from_str(proof_params.as_str()).unwrap();
 
     // pass the input to the guest code
-    let input: (SessionHeader, SubstringsProof) = (proof_params.header, proof_params.substrings);
+    let input: (String, String) = (serde_json::to_string(&proof_params.header).unwrap(), serde_json::to_string(&proof_params.substrings).unwrap());
     let env = ExecutorEnv::builder().write(&input).unwrap().build().unwrap();
 
     // Produce a receipt by proving the specified ELF binary.
@@ -32,8 +32,8 @@ fn main() {
 
     // Print, notice, after committing to a journal, the private input became public
     println!("I generated a proof of guest execution!");
-    println!("Request: \n{}", request);
-    println!("Response: \n {}", response);
+    println!("Request:{}", request);
+    println!("Response:{}", response);
 
 
     receipt.verify(ZKAF_ID).unwrap();

@@ -7,7 +7,13 @@ risc0_zkvm::guest::entry!(main);
 
 fn main() {
     // read the substring
-    let (session_header, substrings): (SessionHeader, SubstringsProof) = env::read();
+    let (session_header,  substrings): (String, String) = env::read();
+    
+    // handle deserialization manually
+    // ? more efficiently pass bytes instead of strings?
+    let session_header: SessionHeader = serde_json::from_str(&session_header).unwrap();
+    let substrings: SubstringsProof = serde_json::from_str(&substrings).unwrap();
+    
     let (sent, recv) = substrings.verify(&session_header).unwrap();
 
     // set redacted string value
