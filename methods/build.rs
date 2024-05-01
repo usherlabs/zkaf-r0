@@ -1,5 +1,7 @@
 use serde::{Serialize, Deserialize};
-use std::fs;
+use std::fs::{self, File};
+use std::io::Write;
+use std::path::Path;
 
 use tlsn_core::{proof::{SessionProof, SubstringsProof, TlsProof}, SessionHeader};
 use p256::pkcs8::DecodePublicKey;
@@ -14,7 +16,7 @@ struct ZkParam {
 
 
 fn build_proof() -> Result<(), Box<dyn std::error::Error>> {
-    let proof = std::fs::read_to_string("../host/fixtures/proof.json").unwrap();
+    let proof = std::fs::read_to_string("../host/fixtures/twitter_proof.json").unwrap();
     let proof: TlsProof = serde_json::from_str(proof.as_str()).unwrap();
 
     let TlsProof {
@@ -48,7 +50,17 @@ fn build_proof() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let json = serde_json::to_string(&params)?;
-    fs::write("../host/fixtures/zk_params.json", json)?;
+
+    let file_path = "../inputs/zk_params.json";
+    let path = Path::new(file_path);
+    // Check if the parent directory exists, and create it if it does not.
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    // Open the file in write mode. This will create the file if it does not exist.
+    let mut file = File::create(path)?;
+    // Write content to the file.
+    file.write_all(json.as_bytes())?;
     Ok(())
 }
 
