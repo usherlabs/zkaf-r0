@@ -15,12 +15,12 @@ fn main() {
     // recv.set_redacted(b'X');
 
     // recover the request and response
-    let request = String::from_utf8(sent.data().to_vec()).unwrap();
-    let response = String::from_utf8(recv.data().to_vec()).unwrap();
+    // let request = String::from_utf8(sent.data().to_vec()).unwrap();
+    // let response = String::from_utf8(recv.data().to_vec()).unwrap();
 
     // Log that we've successfully recovered the request and response...
-    let is_req = !request.is_empty();
-    let is_res = !response.is_empty();
+    let is_req = !sent.data().to_vec().is_empty();
+    let is_res = !recv.data().to_vec().is_empty();
 
     env::log("committing results to journal");
     env::commit(&(is_req, is_res));
