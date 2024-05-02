@@ -1,112 +1,77 @@
-# RISC Zero Rust Starter Template
 
-Welcome to the RISC Zero Rust Starter Template! This template is intended to
-give you a starting point for building a project using the RISC Zero zkVM.
-Throughout the template (including in this README), you'll find comments
-labelled `TODO` in places where you'll need to make changes. To better
-understand the concepts behind this template, check out the [zkVM
-Overview][zkvm-overview].
+# WIP: ZK Attestation Framework - by [Usher Labs](https://www.usher.so)
 
-## Quick Start
+## Supported platforms
 
-First, make sure [rustup] is installed. The
-[`rust-toolchain.toml`][rust-toolchain] file will be used by `cargo` to
-automatically install the correct version.
+- **Linux x86-64**
 
-To build all methods and execute the method within the zkVM, run the following
-command:
+Docker must operate on a compatible OS to work.
+**Apple Silicon:** Is not compatible even with `--platform linux/amd64`.
 
-```bash
-cargo run
+## Prerequisites
+- `RUST`: The RISC Zero zkVM requires Rust, so start by [installing Rust and  `rustup`](https://doc.rust-lang.org/cargo/getting-started/installation.html) if you don't already have it. Please note that you will need to follow the recommended Rust installation instructions that use [rustup](https://rustup.rs/) rather than any of the alternative Rust installation options, as RISC Zero depends on the [rustup](https://rustup.rs/) tool specifically.
+
+- `CUDA` If you intend to run this `GPU` in order to reduce proof generation time, then you would need to install the required dependencies. Instructions on how to install and validate your installation of the dependencies on ubuntu can be found [here](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu).
+
+
+## [Installation](https://dev.risczero.com/api/zkvm/install)
+Next, install the  [`cargo risczero`](https://crates.io/crates/cargo-risczero)  tool and use its  [`install`  command](https://crates.io/crates/cargo-risczero)  to install the toolchain by running:
+
+```
+cargo install cargo-binstallcargo binstall cargo-risczerocargo risczero install
 ```
 
-This is an empty template, and so there is no expected output (until you modify
-the code).
+If this is successful, it will finish by printing the message
 
-### Executing the project locally in development mode
-
-During development, faster iteration upon code changes can be achieved by leveraging [dev-mode], we strongly suggest activating it during your early development phase. Furthermore, you might want to get insights into the execution statistics of your project, and this can be achieved by specifying the environment variable `RUST_LOG="[executor]=info"` before running your project.
-
-Put together, the command to run your project in development mode while getting execution statistics is:
-
-```bash
-RUST_LOG="[executor]=info" RISC0_DEV_MODE=1 cargo run
+```
+The risc0 toolchain is now ready to use.
 ```
 
-### Running proofs remotely on Bonsai
+You can verify the toolchain was installed correctly by running
 
-_Note: The Bonsai proving service is still in early Alpha; an API key is
-required for access. [Click here to request access][bonsai access]._
-
-If you have access to the URL and API key to Bonsai you can run your proofs
-remotely. To prove in Bonsai mode, invoke `cargo run` with two additional
-environment variables:
-
-```bash
-BONSAI_API_KEY="YOUR_API_KEY" BONSAI_API_URL="BONSAI_URL" cargo run
+```
+rustup toolchain list --verbose | grep risc0
 ```
 
-## How to create a project based on this template
+which should list  `risc0`  along with its path.
 
-Search this template for the string `TODO`, and make the necessary changes to
-implement the required feature described by the `TODO` comment. Some of these
-changes will be complex, and so we have a number of instructional resources to
-assist you in learning how to write your own code for the RISC Zero zkVM:
+## Generating the data.
+```
+cd zkaf-r0
+cargo build --release
+```
+The process for generating a proof for a tlsn proof can be broken down as showed below:
 
-- The [RISC Zero Developer Docs][dev-docs] is a great place to get started.
-- Example projects are available in the [examples folder][examples] of
-  [`risc0`][risc0-repo] repository.
-- Reference documentation is available at [https://docs.rs][docs.rs], including
-  [`risc0-zkvm`][risc0-zkvm], [`cargo-risczero`][cargo-risczero],
-  [`risc0-build`][risc0-build], and [others][crates].
+ #### Generating the TLSN proof:
+ After a TLSN proof for a tweet has been generated, it is then placed in the `fixtures` directory [here](https://github.com/usherlabs/zkaf-r0/blob/master/host/fixtures/twitter_proof.json).
 
-## Directory Structure
-
-It is possible to organize the files for these components in various ways.
-However, in this starter template we use a standard directory structure for zkVM
-applications, which we think is a good starting point for your applications.
-
-```text
-project_name
-├── Cargo.toml
-├── host
-│   ├── Cargo.toml
-│   └── src
-│       └── main.rs                        <-- [Host code goes here]
-└── methods
-    ├── Cargo.toml
-    ├── build.rs
-    ├── guest
-    │   ├── Cargo.toml
-    │   └── src
-    │       └── bin
-    │           └── method_name.rs         <-- [Guest code goes here]
-    └── src
-        └── lib.rs
+#### Generating ZK private inputs:
+Following the previous step a build script which can be found [here](https://github.com/usherlabs/zkaf-r0/blob/master/methods/build.rs)  is used to validate tcp and ssl sessions and then generate the inputs to the zk circuit.
+```
+struct ZkParam {
+    header: SessionHeader,
+    substrings: SubstringsProof,
+}
 ```
 
-## Video Tutorial
 
-For a walk-through of how to build with this template, check out this [excerpt
-from our workshop at ZK HACK III][zkhack-iii].
+## Generating and Verifying a proof
+`A proof can either be verified on a CPU or on a GPU`
 
-## Questions, Feedback, and Collaborations
+#### GPU Verification
+In order to run a proof on a `GPU` we first confirm we have installed `CUDA`  as directed in the prerequisites, then enable the cuda feature on the host by including this line in the end of the `Cargo.toml` file.
+```
+[features]
+cuda = ["risc0-zkvm/cuda"]
+```
 
-We'd love to hear from you on [Discord][discord] or [Twitter][twitter].
+The proof can be generated by running `cargo run --release -F cuda` at the root of the project.
 
-[bonsai access]: https://bonsai.xyz/apply
-[cargo-risczero]: https://docs.rs/cargo-risczero
-[crates]: https://github.com/risc0/risc0/blob/main/README.md#rust-binaries
-[dev-docs]: https://dev.risczero.com
-[dev-mode]: https://dev.risczero.com/api/zkvm/dev-mode
-[discord]: https://discord.gg/risczero
-[docs.rs]: https://docs.rs/releases/search?query=risc0
-[examples]: https://github.com/risc0/risc0/tree/main/examples
-[risc0-build]: https://docs.rs/risc0-build
-[risc0-repo]: https://www.github.com/risc0/risc0
-[risc0-zkvm]: https://docs.rs/risc0-zkvm
-[rustup]: https://rustup.rs
-[rust-toolchain]: rust-toolchain.toml
-[twitter]: https://twitter.com/risczero
-[zkvm-overview]: https://dev.risczero.com/zkvm
-[zkhack-iii]: https://www.youtube.com/watch?v=Yg_BGqj_6lg&list=PLcPzhUaCxlCgig7ofeARMPwQ8vbuD6hC5&index=5
+### CPU Verification
+
+The proof can be generated by running `cargo run --release` at the root of the project.
+
+Note: Running the proof generation process on a CPU can be time consuming so it can be run in dev mode by 
+`RISC0_DEV_MODE=1 cargo run --release` at the root of the project
+
+
