@@ -17,11 +17,13 @@ fn main() {
     let prover = default_prover();
 
     // read in th einputs from json
-    let proof_params = std::fs::read_to_string("inputs/zk_params.json").unwrap();
+    let pub_key = std::fs::read_to_string("host/fixtures/notary.pub").unwrap();
+    let proof_params = std::fs::read_to_string("host/fixtures/twitter_proof.json").unwrap();
+    let wasm_bytes = std::fs::read_to_string("host/fixtures/verity_zk_verifier.wasm").unwrap();
     let proof_params: ZkParam = serde_json::from_str(proof_params.as_str()).unwrap();
 
     // pass the input to the guest code
-    let input: (String, String) = (serde_json::to_string(&proof_params.header).unwrap(), serde_json::to_string(&proof_params.substrings).unwrap());
+    let input: (String, String, String, String) = (serde_json::to_string(&proof_params.session).unwrap(), serde_json::to_string(&proof_params.substrings).unwrap(), wasm_bytes, pub_key);
     let env = ExecutorEnv::builder().write(&input).unwrap().build().unwrap();
 
     // Produce a receipt by proving the specified ELF binary.
